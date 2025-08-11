@@ -6,73 +6,218 @@
   <title>Daftar Hadir Tamu - Indah & Mario</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'soft-pink': '#F8D7DA',
+            'cream': '#FFF8DC',
+            'gold': '#FFD700',
+            'rose-gold': '#E8B4B8',
+            'blush': '#F5C2C7'
+          },
+          fontFamily: {
+            'playfair': ['Playfair Display', 'serif'],
+            'poppins': ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-cream min-h-screen">
-  <div class="max-w-6xl mx-auto px-4 py-10">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
-      <h1 class="font-playfair text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 text-center md:text-left">
-        Daftar Tamu Hadir
-      </h1>
-      <a href="./index.html" class="self-center md:self-auto inline-flex items-center text-rose-gold hover:text-rose-gold/80">
-        <i class="fas fa-arrow-left mr-2"></i>
-        <span class="hidden sm:inline">Kembali ke Undangan</span>
-        <span class="sm:hidden">Kembali</span>
-      </a>
-    </div>
+<body class="bg-cream min-h-screen font-poppins">
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebar-toggle" class="fixed top-4 left-4 z-50 p-3 bg-rose-gold text-white rounded-full shadow-lg hover:bg-rose-gold/80 transition-all md:hidden">
+    <i class="fas fa-bars"></i>
+  </button>
 
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="col-span-1">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Pencarian</label>
-          <input id="search-input" type="text" placeholder="Cari nama atau email..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent" />
+  <!-- Mobile Overlay -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-30 hidden md:hidden"></div>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="fixed inset-y-0 left-0 z-40 w-80 bg-gradient-to-b from-white to-rose-gold/5 bg-white/90 backdrop-blur-md shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0 md:w-80 md:sticky md:top-0 md:h-screen md:overflow-y-auto">
+    <div class="flex flex-col h-full">
+      <!-- Sidebar Header -->
+      <div class="flex items-center justify-between p-6 border-b border-gray-200">
+        <h2 class="font-playfair text-xl font-semibold text-gray-800">Dashboard</h2>
+        <button id="sidebar-close" class="md:hidden p-2 text-gray-500 hover:text-gray-700">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Sidebar Navigation -->
+      <nav class="flex-1 p-6 space-y-4">
+        <button id="nav-rsvp" class="w-full flex items-center p-4 text-left bg-rose-gold/10 text-rose-gold rounded-lg border border-rose-gold/20 nav-btn active">
+          <i class="fas fa-users mr-3"></i>
+          <span>Daftar RSVP</span>
+        </button>
+        <button id="nav-wishes" class="w-full flex items-center p-4 text-left text-gray-600 hover:bg-gray-50 rounded-lg border border-transparent nav-btn">
+          <i class="fas fa-heart mr-3"></i>
+          <span>Daftar Ucapan</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="p-6 border-t border-gray-200">
+        <a href="./index.html" class="w-full flex items-center justify-center p-3 bg-gradient-to-r from-rose-gold to-gold text-white rounded-lg hover:shadow-lg transition-all">
+          <i class="fas fa-arrow-left mr-2"></i>
+          Kembali ke Undangan
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="md:ml-80 lg:ml-96 transition-[margin] duration-300">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-10">
+      <!-- Page Header -->
+      <div class="mb-8">
+        <h1 id="page-title" class="font-playfair text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 text-center md:text-left mb-4">
+          Daftar Tamu Hadir
+        </h1>
+        <p id="page-description" class="text-gray-600 text-center md:text-left">
+          Kelola data kehadiran dan ucapan tamu undangan
+        </p>
+      </div>
+
+      <!-- Filters Section -->
+      <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+        <div class="grid md:grid-cols-5 gap-4 lg:gap-6">
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Pencarian</label>
+            <input id="search-input" type="text" placeholder="Cari nama atau email..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent" />
+          </div>
+          <div class="md:col-span-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Filter Status</label>
+            <select id="filter-status" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent">
+              <option value="all">Semua</option>
+              <option value="hadir" selected>Hadir saja</option>
+              <option value="tidak-hadir">Tidak Hadir saja</option>
+            </select>
+          </div>
+          <div class="md:col-span-1">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Urutkan</label>
+            <select id="sort-by" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent">
+              <option value="newest">Terbaru</option>
+              <option value="oldest">Terlama</option>
+              <option value="name">Nama A-Z</option>
+            </select>
+          </div>
+          <div class="md:col-span-1 flex items-end">
+            <button id="export-csv" class="w-full md:w-auto px-5 py-2.5 bg-gradient-to-r from-rose-gold to-gold text-black font-medium rounded-lg hover:shadow-lg transition-all">
+              <i class="fas fa-file-export mr-2"></i>Export CSV
+            </button>
+          </div>
         </div>
-        <div class="col-span-1">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Filter Kehadiran</label>
-          <select id="filter-attendance" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent">
-            <option value="hadir" selected>Hadir saja</option>
-            <option value="tidak-hadir">Tidak Hadir saja</option>
-            <option value="all">Semua (Hadir & Tidak Hadir)</option>
-          </select>
+      </div>
+
+      <!-- Content Container -->
+      <div id="content-container">
+        <!-- RSVP Content -->
+        <div id="rsvp-content" class="content-section">
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Desktop/Table view -->
+            <div class="overflow-x-auto hidden md:block relative">
+              <table class="min-w-full table-fixed divide-y divide-gray-200">
+                <thead class="bg-white sticky top-0 z-10 shadow-sm">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-12">No</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-56">Nama</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-72">Email</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-32">Kehadiran</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-32">Jumlah Tamu</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-48">Waktu</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-20">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="rsvp-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+              </table>
+            </div>
+            <!-- Mobile/Card view -->
+            <div class="md:hidden">
+              <div id="rsvp-card-list" class="divide-y divide-gray-100"></div>
+            </div>
+            <div id="rsvp-empty-state" class="hidden p-8 text-center text-gray-500">Belum ada data RSVP.</div>
+          </div>
         </div>
-        <div class="col-span-1 flex items-end">
-          <button id="export-csv" class="w-full md:w-auto px-5 py-2.5 bg-gradient-to-r from-rose-gold to-gold text-black font-medium rounded-lg hover:shadow-lg transition-all">
-            <i class="fas fa-file-export mr-2"></i>Export CSV
+
+        <!-- Wishes Content -->
+        <div id="wishes-content" class="content-section hidden">
+          <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Desktop/Table view -->
+            <div class="overflow-x-auto hidden md:block relative">
+              <table class="min-w-full table-fixed divide-y divide-gray-200">
+                <thead class="bg-white sticky top-0 z-10 shadow-sm">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-12">No</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-56">Nama</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Ucapan</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-48">Waktu</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider w-20">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="wishes-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+              </table>
+            </div>
+            <!-- Mobile/Card view -->
+            <div class="md:hidden">
+              <div id="wishes-card-list" class="divide-y divide-gray-100"></div>
+            </div>
+            <div id="wishes-empty-state" class="hidden p-8 text-center text-gray-500">Belum ada ucapan.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Summary -->
+      <div class="grid md:grid-cols-3 gap-6 mt-8">
+        <div class="bg-gradient-to-br from-white to-rose-gold/10 rounded-2xl shadow-xl p-6 text-center ring-1 ring-rose-gold/10">
+          <div class="flex items-center justify-center gap-3 mb-2">
+            <i class="fas fa-users text-rose-gold"></i>
+            <div class="text-3xl font-bold text-rose-gold" id="total-rsvp">0</div>
+          </div>
+          <div class="text-gray-600">Total RSVP</div>
+        </div>
+        <div class="bg-gradient-to-br from-white to-green-50 rounded-2xl shadow-xl p-6 text-center ring-1 ring-green-100">
+          <div class="flex items-center justify-center gap-3 mb-2">
+            <i class="fas fa-check-circle text-green-600"></i>
+            <div class="text-3xl font-bold text-green-600" id="total-attending">0</div>
+          </div>
+          <div class="text-gray-600">Yang Hadir</div>
+        </div>
+        <div class="bg-gradient-to-br from-white to-yellow-50 rounded-2xl shadow-xl p-6 text-center ring-1 ring-yellow-100">
+          <div class="flex items-center justify-center gap-3 mb-2">
+            <i class="fas fa-heart text-gold"></i>
+            <div class="text-3xl font-bold text-gold" id="total-wishes">0</div>
+          </div>
+          <div class="text-gray-600">Total Ucapan</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full mx-4">
+      <div class="text-center">
+        <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-4"></i>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Konfirmasi Hapus</h3>
+        <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus item ini? Tindakan ini tidak dapat dibatalkan.</p>
+        <div class="flex space-x-3">
+          <button id="delete-cancel" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+            Batal
+          </button>
+          <button id="delete-confirm" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+            Hapus
           </button>
         </div>
       </div>
     </div>
-
-    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-      <!-- Desktop/Table view -->
-      <div class="overflow-x-auto hidden md:block">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kehadiran</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Tamu</th>
-              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu</th>
-            </tr>
-          </thead>
-          <tbody id="rsvp-table-body" class="bg-white divide-y divide-gray-200"></tbody>
-        </table>
-      </div>
-      <!-- Mobile/Card view -->
-      <div class="md:hidden">
-        <div id="rsvp-card-list" class="divide-y divide-gray-100"></div>
-      </div>
-
-      <div id="empty-state" class="hidden p-8 text-center text-gray-500">Belum ada data.</div>
-    </div>
-
-    <p class="text-xs text-gray-400 mt-4">Catatan: Halaman ini hanya bisa diakses via URL langsung: /daftar-hadir.html</p>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCic-Ulb2VV7RKbOyuZnRu9NFCT2eAA1uQ",
@@ -87,15 +232,93 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const tbody = document.getElementById('rsvp-table-body');
-    const cardList = document.getElementById('rsvp-card-list');
-    const emptyState = document.getElementById('empty-state');
+    // DOM Elements
+    const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebarClose = document.getElementById('sidebar-close');
+    const navRsvp = document.getElementById('nav-rsvp');
+    const navWishes = document.getElementById('nav-wishes');
+    const contentContainer = document.getElementById('content-container');
+    const rsvpContent = document.getElementById('rsvp-content');
+    const wishesContent = document.getElementById('wishes-content');
+    const pageTitle = document.getElementById('page-title');
+    const pageDescription = document.getElementById('page-description');
     const searchInput = document.getElementById('search-input');
-    const filterAttendance = document.getElementById('filter-attendance');
+    const filterStatus = document.getElementById('filter-status');
+    const sortBy = document.getElementById('sort-by');
     const exportBtn = document.getElementById('export-csv');
+    const deleteModal = document.getElementById('delete-modal');
+    const deleteCancel = document.getElementById('delete-cancel');
+    const deleteConfirm = document.getElementById('delete-confirm');
 
-    let allData = [];
+    // Data containers
+    const rsvpTableBody = document.getElementById('rsvp-table-body');
+    const rsvpCardList = document.getElementById('rsvp-card-list');
+    const rsvpEmptyState = document.getElementById('rsvp-empty-state');
+    const wishesTableBody = document.getElementById('wishes-table-body');
+    const wishesCardList = document.getElementById('wishes-card-list');
+    const wishesEmptyState = document.getElementById('wishes-empty-state');
 
+    // Stats elements
+    const totalRsvp = document.getElementById('total-rsvp');
+    const totalAttending = document.getElementById('total-attending');
+    const totalWishes = document.getElementById('total-wishes');
+
+    let allRsvpData = [];
+    let allWishesData = [];
+    let currentView = 'rsvp';
+    let itemToDelete = null;
+
+    // Sidebar functionality
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.remove('-translate-x-full');
+    sidebarOverlay.classList.remove('hidden');
+    });
+
+    sidebarClose.addEventListener('click', () => {
+      sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.add('hidden');
+    });
+
+  sidebarOverlay.addEventListener('click', () => {
+    sidebar.classList.add('-translate-x-full');
+    sidebarOverlay.classList.add('hidden');
+  });
+
+    // Navigation
+    navRsvp.addEventListener('click', () => switchView('rsvp'));
+    navWishes.addEventListener('click', () => switchView('wishes'));
+
+    function switchView(view) {
+      currentView = view;
+      
+      // Update navigation buttons
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active', 'bg-rose-gold/10', 'text-rose-gold', 'border-rose-gold/20');
+        btn.classList.add('text-gray-600', 'border-transparent');
+      });
+      
+      if (view === 'rsvp') {
+        navRsvp.classList.add('active', 'bg-rose-gold/10', 'text-rose-gold', 'border-rose-gold/20');
+        navRsvp.classList.remove('text-gray-600', 'border-transparent');
+        rsvpContent.classList.remove('hidden');
+        wishesContent.classList.add('hidden');
+        pageTitle.textContent = 'Daftar Tamu Hadir';
+        pageDescription.textContent = 'Kelola data kehadiran tamu undangan';
+      } else {
+        navWishes.classList.add('active', 'bg-rose-gold/10', 'text-rose-gold', 'border-rose-gold/20');
+        navWishes.classList.remove('text-gray-600', 'border-transparent');
+        wishesContent.classList.remove('hidden');
+        rsvpContent.classList.add('hidden');
+        pageTitle.textContent = 'Daftar Ucapan';
+        pageDescription.textContent = 'Kelola ucapan dan doa dari tamu';
+      }
+      
+      applyFilters();
+    }
+
+    // Utility functions
     function formatTs(ts) {
       try {
         if (!ts) return '';
@@ -106,44 +329,60 @@
       }
     }
 
-    function render(data) {
-      // Clear
-      tbody.innerHTML = '';
-      if (cardList) cardList.innerHTML = '';
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Render functions
+    function renderRsvp(data) {
+      rsvpTableBody.innerHTML = '';
+      if (rsvpCardList) rsvpCardList.innerHTML = '';
 
       if (!data.length) {
-        emptyState.classList.remove('hidden');
+        rsvpEmptyState.classList.remove('hidden');
         return;
       }
-      emptyState.classList.add('hidden');
+      rsvpEmptyState.classList.add('hidden');
 
       data.forEach((row, idx) => {
         // Table row (desktop)
         const tr = document.createElement('tr');
+        tr.className = 'hover:bg-rose-gold/5 transition-colors';
         tr.innerHTML = `
           <td class="px-4 py-3 text-sm text-gray-700">${idx + 1}</td>
-          <td class="px-4 py-3 text-sm font-medium text-gray-900">${(row.name || '').replace(/</g,'&lt;')}</td>
-          <td class="px-4 py-3 text-sm text-gray-700">${(row.email || '').replace(/</g,'&lt;')}</td>
+          <td class="px-4 py-3 text-sm font-medium text-gray-900">${escapeHtml(row.name)}</td>
+          <td class="px-4 py-3 text-sm text-gray-700">${escapeHtml(row.email)}</td>
           <td class="px-4 py-3 text-sm">
             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${row.attendance === 'hadir' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}">${row.attendance || ''}</span>
           </td>
           <td class="px-4 py-3 text-sm text-gray-700">${row.guests ?? ''}</td>
           <td class="px-4 py-3 text-sm text-gray-500">${formatTs(row.createdAt)}</td>
+          <td class="px-4 py-3 text-sm">
+            <button onclick="deleteItem('rsvp', '${row.id}')" class="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
         `;
-        tbody.appendChild(tr);
+        rsvpTableBody.appendChild(tr);
 
         // Card (mobile)
-        if (cardList) {
+        if (rsvpCardList) {
           const card = document.createElement('div');
           card.className = 'p-4';
           card.innerHTML = `
             <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
               <div class="flex items-start justify-between">
                 <div>
-                  <div class="text-base font-semibold text-gray-900">${(row.name || '').replace(/</g,'&lt;')}</div>
-                  <div class="text-xs text-gray-500 mt-0.5">${(row.email || '').replace(/</g,'&lt;')}</div>
+                  <div class="text-base font-semibold text-gray-900">${escapeHtml(row.name)}</div>
+                  <div class="text-xs text-gray-500 mt-0.5">${escapeHtml(row.email)}</div>
                 </div>
-                <span class="ml-3 inline-flex items-center px-2 py-1 rounded-full text-[11px] font-medium ${row.attendance === 'hadir' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}">${row.attendance || ''}</span>
+                <div class="flex items-center space-x-2">
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-[11px] font-medium ${row.attendance === 'hadir' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}">${row.attendance || ''}</span>
+                  <button onclick="deleteItem('rsvp', '${row.id}')" class="text-red-600 hover:text-red-800 p-2 rounded hover:bg-red-50">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
               </div>
               <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
                 <div class="rounded-lg bg-gray-50 p-2">
@@ -157,64 +396,234 @@
               </div>
             </div>
           `;
-          cardList.appendChild(card);
+          rsvpCardList.appendChild(card);
         }
       });
     }
 
-    function applyFilters() {
-      const q = (searchInput.value || '').toLowerCase();
-      const filterVal = filterAttendance.value;
-      const filtered = allData.filter(r => {
-        const matchText = (r.name || '').toLowerCase().includes(q) || (r.email || '').toLowerCase().includes(q);
-        let matchAttend = true;
-        if (filterVal === 'hadir') matchAttend = r.attendance === 'hadir';
-        else if (filterVal === 'tidak-hadir') matchAttend = r.attendance === 'tidak-hadir';
-        else matchAttend = true;
-        return matchText && matchAttend;
+    function renderWishes(data) {
+      wishesTableBody.innerHTML = '';
+      if (wishesCardList) wishesCardList.innerHTML = '';
+
+      if (!data.length) {
+        wishesEmptyState.classList.remove('hidden');
+        return;
+      }
+      wishesEmptyState.classList.add('hidden');
+
+      data.forEach((row, idx) => {
+        // Table row (desktop)
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-rose-gold/5 transition-colors';
+        tr.innerHTML = `
+          <td class="px-4 py-3 text-sm text-gray-700">${idx + 1}</td>
+          <td class="px-4 py-3 text-sm font-medium text-gray-900">${escapeHtml(row.name)}</td>
+          <td class="px-4 py-3 text-sm text-gray-700 max-w-xs truncate">${escapeHtml(row.message)}</td>
+          <td class="px-4 py-3 text-sm text-gray-500">${formatTs(row.createdAt)}</td>
+          <td class="px-4 py-3 text-sm">
+            <button onclick="deleteItem('wishes', '${row.id}')" class="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        `;
+        wishesTableBody.appendChild(tr);
+
+        // Card (mobile)
+        if (wishesCardList) {
+          const card = document.createElement('div');
+          card.className = 'p-4';
+          card.innerHTML = `
+            <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-base font-semibold text-gray-900">${escapeHtml(row.name)}</div>
+                  <div class="text-xs text-gray-500 mt-0.5">${escapeHtml(row.message)}</div>
+                </div>
+                <button onclick="deleteItem('wishes', '${row.id}')" class="text-red-600 hover:text-red-800 p-2 rounded hover:bg-red-50">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+              <div class="mt-3 text-sm">
+                <div class="rounded-lg bg-gray-50 p-2">
+                  <div class="text-[11px] text-gray-500">Waktu</div>
+                  <div class="font-medium text-gray-800">${formatTs(row.createdAt) || '-'}</div>
+                </div>
+              </div>
+            </div>
+          `;
+          wishesCardList.appendChild(card);
+        }
       });
-      render(filtered);
     }
 
-    searchInput.addEventListener('input', applyFilters);
-    filterAttendance.addEventListener('change', applyFilters);
+    // Filter and sort functions
+    function applyFilters() {
+      const searchQuery = (searchInput.value || '').toLowerCase();
+      const filterValue = filterStatus.value;
+      const sortValue = sortBy.value;
 
+      let filteredData = [];
+      
+      if (currentView === 'rsvp') {
+        filteredData = allRsvpData.filter(item => {
+          const matchText = (item.name || '').toLowerCase().includes(searchQuery) || 
+                           (item.email || '').toLowerCase().includes(searchQuery);
+          let matchStatus = true;
+          if (filterValue === 'hadir') matchStatus = item.attendance === 'hadir';
+          else if (filterValue === 'tidak-hadir') matchStatus = item.attendance === 'tidak-hadir';
+          return matchText && matchStatus;
+        });
+
+        // Sort
+        if (sortValue === 'newest') filteredData.sort((a, b) => b.createdAt?.toDate?.() - a.createdAt?.toDate?.());
+        else if (sortValue === 'oldest') filteredData.sort((a, b) => a.createdAt?.toDate?.() - b.createdAt?.toDate?.());
+        else if (sortValue === 'name') filteredData.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+        renderRsvp(filteredData);
+      } else {
+        filteredData = allWishesData.filter(item => {
+          const matchText = (item.name || '').toLowerCase().includes(searchQuery) || 
+                           (item.message || '').toLowerCase().includes(searchQuery);
+          return matchText;
+        });
+
+        // Sort
+        if (sortValue === 'newest') filteredData.sort((a, b) => b.createdAt?.toDate?.() - a.createdAt?.toDate?.());
+        else if (sortValue === 'oldest') filteredData.sort((a, b) => a.createdAt?.toDate?.() - b.createdAt?.toDate?.());
+        else if (sortValue === 'name') filteredData.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+        renderWishes(filteredData);
+      }
+    }
+
+    // Delete functionality
+    window.deleteItem = function(type, id) {
+      itemToDelete = { type, id };
+      deleteModal.classList.remove('hidden');
+      deleteModal.classList.add('flex');
+    };
+
+    deleteCancel.addEventListener('click', () => {
+      deleteModal.classList.add('hidden');
+      deleteModal.classList.remove('flex');
+      itemToDelete = null;
+    });
+
+    deleteConfirm.addEventListener('click', async () => {
+      if (!itemToDelete) return;
+      
+      try {
+        const { type, id } = itemToDelete;
+        const collectionName = type === 'rsvp' ? 'rsvps' : 'wishes';
+        
+        await deleteDoc(doc(db, collectionName, id));
+        
+        showNotification(`${type === 'rsvp' ? 'RSVP' : 'Ucapan'} berhasil dihapus!`, 'success');
+      } catch (error) {
+        console.error('Delete error:', error);
+        showNotification('Gagal menghapus item. Coba lagi.', 'error');
+      }
+      
+      deleteModal.classList.add('hidden');
+      deleteModal.classList.remove('flex');
+      itemToDelete = null;
+    });
+
+    // Export functionality
     exportBtn.addEventListener('click', () => {
-      const rows = [['No','Nama','Email','Kehadiran','Jumlah Tamu','Waktu']];
-      const data = tbody.querySelectorAll('tr');
+      const headers = currentView === 'rsvp' 
+        ? ['No', 'Nama', 'Email', 'Kehadiran', 'Jumlah Tamu', 'Waktu']
+        : ['No', 'Nama', 'Ucapan', 'Waktu'];
+      
+      const rows = [headers];
+      const data = currentView === 'rsvp' 
+        ? rsvpTableBody.querySelectorAll('tr')
+        : wishesTableBody.querySelectorAll('tr');
+      
       data.forEach((tr) => {
         const tds = tr.querySelectorAll('td');
-        if (tds.length >= 6) {
-          rows.push([
-            tds[0].innerText.trim(),
-            tds[1].innerText.trim(),
-            tds[2].innerText.trim(),
-            tds[3].innerText.trim(),
-            tds[4].innerText.trim(),
-            tds[5].innerText.trim(),
-          ]);
+        if (tds.length >= (currentView === 'rsvp' ? 6 : 4)) {
+          const rowData = [];
+          for (let i = 0; i < (currentView === 'rsvp' ? 6 : 4); i++) {
+            rowData.push(tds[i].innerText.trim());
+          }
+          rows.push(rowData);
         }
       });
+      
       const csv = rows.map(r => r.map(v => '"' + v.replace(/"/g,'""') + '"').join(',')).join('\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'daftar-hadir.csv';
+      a.download = `daftar-${currentView === 'rsvp' ? 'hadir' : 'ucapan'}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     });
 
-    // Live data
-    const qRef = query(collection(db, 'rsvps'), orderBy('createdAt','desc'));
-    onSnapshot(qRef, (snap) => {
-      allData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      applyFilters();
-    }, (err) => {
-      console.error('Listen error:', err);
+    // Update stats
+    function updateStats() {
+      totalRsvp.textContent = allRsvpData.length;
+      totalAttending.textContent = allRsvpData.filter(item => item.attendance === 'hadir').length;
+      totalWishes.textContent = allWishesData.length;
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', applyFilters);
+    filterStatus.addEventListener('change', applyFilters);
+    sortBy.addEventListener('change', applyFilters);
+
+    // Firebase listeners
+    const rsvpQuery = query(collection(db, 'rsvps'), orderBy('createdAt', 'desc'));
+    const wishesQuery = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'));
+
+    onSnapshot(rsvpQuery, (snapshot) => {
+      allRsvpData = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      if (currentView === 'rsvp') applyFilters();
+      updateStats();
     });
+
+    onSnapshot(wishesQuery, (snapshot) => {
+      allWishesData = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      if (currentView === 'wishes') applyFilters();
+      updateStats();
+    });
+
+    // Notification function
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white transform translate-x-full transition-transform duration-300`;
+      
+      switch(type) {
+        case 'success':
+          notification.classList.add('bg-green-500');
+          break;
+        case 'error':
+          notification.classList.add('bg-red-500');
+          break;
+        default:
+          notification.classList.add('bg-blue-500');
+      }
+      
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.classList.remove('translate-x-full');
+      }, 100);
+      
+      setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+
+    // Initialize
+    switchView('rsvp');
   </script>
 </body>
 </html>
