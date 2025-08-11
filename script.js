@@ -994,6 +994,7 @@ function initializeGallery() {
         let startY = 0;
         let currentRotationY = 0;
         let isRotating = false;
+        let isFlipped = false;
         
         // Initialize card rotation
         gsap.set(cardInner, { rotationY: 0 });
@@ -1036,21 +1037,12 @@ function initializeGallery() {
                 card.classList.add('interacted');
             }
             
-            // Determine final position based on drag distance for 360° rotation
-            if (Math.abs(deltaX) > 80) {
+            // Determine final position based on drag distance - flip to opposite side
+            if (Math.abs(deltaX) > 60) {
                 isRotating = true;
-                // Significant drag - rotate card 90 degrees in drag direction
-                if (deltaX > 0) {
-                    // Drag right - rotate clockwise
-                    currentRotationY += 90;
-                } else {
-                    // Drag left - rotate counter-clockwise
-                    currentRotationY -= 90;
-                }
-                
-                // Normalize rotation to 0-360 range for cleaner values (optional)
-                currentRotationY = currentRotationY % 360;
-                if (currentRotationY < 0) currentRotationY += 360;
+                // Significant drag - flip card to opposite side
+                isFlipped = !isFlipped;
+                currentRotationY = isFlipped ? 180 : 0;
             }
             // If small drag, keep current rotation (no change needed)
             
@@ -1120,21 +1112,12 @@ function initializeGallery() {
                 card.classList.add('interacted');
             }
             
-            // Determine final position based on swipe distance for 360° rotation
-            if (Math.abs(deltaX) > 70 && isHorizontalSwipe) {
+            // Determine final position based on swipe distance - flip to opposite side
+            if (Math.abs(deltaX) > 50 && isHorizontalSwipe) {
                 isRotating = true;
-                // Significant horizontal swipe - rotate card 90 degrees in swipe direction
-                if (deltaX > 0) {
-                    // Swipe right - rotate clockwise
-                    currentRotationY += 90;
-                } else {
-                    // Swipe left - rotate counter-clockwise
-                    currentRotationY -= 90;
-                }
-                
-                // Normalize rotation to 0-360 range for cleaner values (optional)
-                currentRotationY = currentRotationY % 360;
-                if (currentRotationY < 0) currentRotationY += 360;
+                // Significant horizontal swipe - flip card to opposite side
+                isFlipped = !isFlipped;
+                currentRotationY = isFlipped ? 180 : 0;
             }
             // If small swipe, keep current rotation (no change needed)
             
@@ -1159,10 +1142,7 @@ function initializeGallery() {
                     // Single tap - do nothing (let swipe handle rotation)
                 } else if (tapCount === 2) {
                     // Double tap - open lightbox
-                    // Determine which side is currently showing based on rotation
-                    const normalizedRotation = ((currentRotationY % 360) + 360) % 360;
-                    const isBackSide = normalizedRotation > 90 && normalizedRotation < 270;
-                    const currentSrc = isBackSide ? card.dataset.back : card.dataset.front;
+                    const currentSrc = isFlipped ? card.dataset.back : card.dataset.front;
                     const imageIndex = galleryImages.indexOf(currentSrc);
                     if (imageIndex !== -1) {
                         currentGalleryIndex = imageIndex;
