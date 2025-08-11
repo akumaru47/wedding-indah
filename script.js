@@ -877,7 +877,7 @@ function initializeEventCards() {
             startX = touch.clientX;
             startY = touch.clientY;
             card.classList.add('dragging');
-            e.preventDefault();
+            // Don't prevent default here to allow scroll detection
         });
         
         card.addEventListener('touchmove', (e) => {
@@ -887,11 +887,24 @@ function initializeEventCards() {
             const deltaX = touch.clientX - startX;
             const deltaY = touch.clientY - startY;
             
-            // Horizontal swipe detection
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            // More strict horizontal swipe detection
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 2 && Math.abs(deltaX) > 30;
+            const isVerticalScroll = Math.abs(deltaY) > Math.abs(deltaX) * 1.5 && Math.abs(deltaY) > 20;
+            
+            if (isHorizontalSwipe && !isVerticalScroll) {
                 const rotationY = currentRotationY + (deltaX * 0.3);
                 gsap.set(cardInner, { rotationY: rotationY });
-                e.preventDefault(); // Prevent scrolling
+                e.preventDefault(); // Prevent scrolling only for horizontal swipes
+            } else if (isVerticalScroll) {
+                // Allow vertical scrolling, stop card interaction
+                isDragging = false;
+                card.classList.remove('dragging');
+                // Reset card position
+                gsap.to(cardInner, {
+                    rotationY: currentRotationY,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
             }
         });
         
@@ -902,22 +915,26 @@ function initializeEventCards() {
             card.classList.remove('dragging');
             const touch = e.changedTouches[0];
             const deltaX = touch.clientX - startX;
+            const deltaY = touch.clientY - startY;
+            
+            // Only process horizontal swipes for card flip
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 2;
             
             // Mark as interacted for indicator fade
-            if (Math.abs(deltaX) > 10) {
+            if (Math.abs(deltaX) > 30 && isHorizontalSwipe) {
                 card.classList.add('interacted');
             }
             
-            // Determine final position based on swipe distance
-            if (Math.abs(deltaX) > 40) {
-                // Significant swipe - flip card
+            // Determine final position based on swipe distance (increased threshold)
+            if (Math.abs(deltaX) > 60 && isHorizontalSwipe) {
+                // Significant horizontal swipe - flip card
                 if (deltaX > 0 && !isFlipped) {
                     flipToMap();
                 } else if (deltaX < 0 && isFlipped) {
                     flipToInfo();
                 }
             } else {
-                // Small swipe - return to current state
+                // Small swipe or vertical movement - return to current state
                 currentRotationY = isFlipped ? 180 : 0;
                 gsap.to(cardInner, {
                     rotationY: currentRotationY,
@@ -1044,7 +1061,7 @@ function initializeGallery() {
             startX = touch.clientX;
             startY = touch.clientY;
             card.classList.add('dragging');
-            e.preventDefault();
+            // Don't prevent default here to allow scroll detection
         });
         
         card.addEventListener('touchmove', (e) => {
@@ -1054,11 +1071,24 @@ function initializeGallery() {
             const deltaX = touch.clientX - startX;
             const deltaY = touch.clientY - startY;
             
-            // Horizontal swipe detection
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            // More strict horizontal swipe detection for gallery
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 2 && Math.abs(deltaX) > 30;
+            const isVerticalScroll = Math.abs(deltaY) > Math.abs(deltaX) * 1.5 && Math.abs(deltaY) > 20;
+            
+            if (isHorizontalSwipe && !isVerticalScroll) {
                 const rotationY = currentRotationY + (deltaX * 0.3);
                 gsap.set(cardInner, { rotationY: rotationY });
-                e.preventDefault(); // Prevent scrolling
+                e.preventDefault(); // Prevent scrolling only for horizontal swipes
+            } else if (isVerticalScroll) {
+                // Allow vertical scrolling, stop card interaction
+                isDragging = false;
+                card.classList.remove('dragging');
+                // Reset card position
+                gsap.to(cardInner, {
+                    rotationY: currentRotationY,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
             }
         });
         
@@ -1069,19 +1099,23 @@ function initializeGallery() {
             card.classList.remove('dragging');
             const touch = e.changedTouches[0];
             const deltaX = touch.clientX - startX;
+            const deltaY = touch.clientY - startY;
+            
+            // Only process horizontal swipes for gallery card flip
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 2;
             
             // Mark as interacted for indicator fade
-            if (Math.abs(deltaX) > 10) {
+            if (Math.abs(deltaX) > 30 && isHorizontalSwipe) {
                 card.classList.add('interacted');
             }
             
-            // Determine final position based on swipe distance
-            if (Math.abs(deltaX) > 40) {
-                // Significant swipe - flip card
+            // Determine final position based on swipe distance (increased threshold)
+            if (Math.abs(deltaX) > 60 && isHorizontalSwipe) {
+                // Significant horizontal swipe - flip card
                 isFlipped = deltaX > 0 ? true : false;
                 currentRotationY = isFlipped ? 180 : 0;
             } else {
-                // Small swipe - return to current state
+                // Small swipe or vertical movement - return to current state
                 currentRotationY = isFlipped ? 180 : 0;
             }
             
