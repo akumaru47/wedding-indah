@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=1.0, maximum-scale=3.0">
+    <title>Wedding Invitation - Indah & Mario</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'soft-pink': '#F8D7DA',
+                        'cream': '#FFF8DC',
+                        'gold': '#FFD700',
+                        'rose-gold': '#E8B4B8',
+                        'blush': '#F5C2C7'
+                    },
+                    fontFamily: {
+                        'playfair': ['Playfair Display', 'serif'],
+                        'poppins': ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-poppins bg-cream overflow-x-hidden overflow-y-auto">
+    
+    <!-- Vignette Flash Effect -->
+    <div id="vignette-overlay" class="fixed inset-0 z-50 pointer-events-none">
+        <!-- Vignette Layer -->
+        <div id="vignette-layer" class="absolute inset-0 vignette-effect"></div>
+        <!-- Flash Layer -->
+        <div id="flash-layer" class="absolute inset-0 flash-effect"></div>
+    </div>
+
+
+
+    <!-- Music Control -->
+    <div id="music-control" class="fixed bottom-4 right-4 z-40 bg-white/80 backdrop-blur-sm rounded-full p-3 shadow-lg cursor-pointer hover:bg-white/90 transition-all">
+        <i id="music-icon" class="fas fa-music text-rose-gold"></i>
+    </div>
+
+
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-30 bg-white/80 backdrop-blur-sm border-b border-rose-gold/20 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-4 py-3">
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex justify-center space-x-8">
+                <a href="#hero" class="nav-link text-sm font-medium text-gray-700 hover:text-rose-gold transition-colors">Home</a>
+                <a href="#story" class="nav-link text-sm font-medium text-gray-700 hover:text-rose-gold transition-colors">Our Story</a>
+                <a href="#details" class="nav-link text-sm font-medium text-gray-700 hover:text-rose-gold transition-colors">Details</a>
+                <a href="#gallery" class="nav-link text-sm font-medium text-gray-700 hover:text-rose-gold transition-colors">Gallery</a>
+                <a href="#rsvp" class="nav-link text-sm font-medium text-gray-700 hover:text-rose-gold transition-colors">RSVP</a>
+                <a href="#amplop" class="nav-link text-sm font-medium text-gray-700 hover:text-rose-gold transition-colors">Amplop</a>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <div class="md:hidden flex justify-between items-center">
+                <div class="font-playfair text-lg font-semibold text-rose-gold">Indah & Mario</div>
+                <button id="mobile-menu-toggle" class="p-2 text-gray-700 hover:text-rose-gold transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu Dropdown -->
+            <div id="mobile-menu" class="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-rose-gold/20 shadow-lg transform -translate-y-full opacity-0 transition-all duration-300 pointer-events-none">
+                <div class="container mx-auto px-4 py-4 space-y-2">
+                    <a href="#hero" class="nav-link block py-3 px-4 text-gray-700 hover:text-rose-gold hover:bg-rose-gold/10 rounded-lg transition-colors">Home</a>
+                    <a href="#story" class="nav-link block py-3 px-4 text-gray-700 hover:text-rose-gold hover:bg-rose-gold/10 rounded-lg transition-colors">Our Story</a>
+                    <a href="#details" class="nav-link block py-3 px-4 text-gray-700 hover:text-rose-gold hover:bg-rose-gold/10 rounded-lg transition-colors">Details</a>
+                    <a href="#gallery" class="nav-link block py-3 px-4 text-gray-700 hover:text-rose-gold hover:bg-rose-gold/10 rounded-lg transition-colors">Gallery</a>
+                    <a href="#rsvp" class="nav-link block py-3 px-4 text-gray-700 hover:text-rose-gold hover:bg-rose-gold/10 rounded-lg transition-colors">RSVP</a>
+                    <a href="#amplop" class="nav-link block py-3 px-4 text-gray-700 hover:text-rose-gold hover:bg-rose-gold/10 rounded-lg transition-colors">Amplop</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cherry Blossom Floating Animation -->
+    <div class="cherry-blossom-container sakura-force-front" id="cherry-blossom-container" data-force="true">
+        <!-- Canvas akan dibuat oleh JavaScript -->
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen relative flex items-center justify-center overflow-hidden hero-bg">
+        <!-- Background Overlay for readability -->
+        <div class="hero-overlay"></div>
+        
+        <!-- Main Content -->
+        <div class="text-center z-10 px-4">
+            
+
+            <!-- Wedding Announcement -->
+            <div class="mb-8">
+                <p class="text-rose-gold font-medium tracking-wider mb-2 opacity-0" id="wedding-text">THE WEDDING OF</p>
+            </div>
+
+            <!-- Couple Names -->
+            <div class="mb-12">
+                <h1 class="font-playfair text-6xl md:text-8xl font-bold text-gray-800 mb-4">
+                    <span id="bride-name" class="handwriting-text">Indah</span>
+                    <span class="text-gold mx-4">&</span>
+                    <span id="groom-name" class="handwriting-text">Mario</span>
+                </h1>
+                <div class="w-32 h-0.5 bg-gradient-to-r from-rose-gold to-gold mx-auto"></div>
+            </div>
+
+            <!-- Date -->
+            <div class="mb-12">
+                <p class="text-xl md:text-2xl text-gray-700 font-light opacity-0" id="wedding-date">
+                    Save the Date<br>
+                    <span class="font-playfair font-semibold text-2xl md:text-3xl text-rose-gold">25 Desember 2024</span>
+                </p>
+            </div>
+
+            <!-- Open Invitation Button -->
+            <button id="open-invitation" class="relative px-8 py-4 bg-gradient-to-r from-rose-gold to-gold text-white font-medium rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                Buka Undangan
+            </button>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-rose-gold text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section id="story" class="py-20 bg-white relative overflow-hidden">
+        <div class="container mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <h2 class="font-playfair text-4xl md:text-5xl font-bold text-gray-800 mb-4">Our Love Story</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Perjalanan cinta kami yang indah menuju hari bahagia</p>
+                <div class="w-24 h-0.5 bg-gradient-to-r from-rose-gold to-gold mx-auto mt-4"></div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="max-w-4xl mx-auto">
+                <div class="timeline-container">
+                    <!-- PERTEMUAN -->
+                    <div class="timeline-item flex flex-col md:flex-row items-center mb-16 opacity-0" data-story="1">
+                        <div class="md:w-1/2 md:pl-8 text-center md:text-left">
+                            <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-3 uppercase">PERTEMUAN</h3>
+                            <p class="text-gray-600 leading-relaxed">• Tidak ada yang kebetulan di dunia ini. Semua sudah tersusun dengan rapi, oleh sang maha kuasa, kita tidak bisa memilih kepada siapa kita akan jatuh cinta. Kami bersatu pertama kalinya tanpa sengaja pada tahun 2012.</p>
+                        </div>
+                    </div>
+
+                    <!-- PENDEKATAN -->
+                    <div class="timeline-item flex flex-col md:flex-row-reverse items-center mb-16 opacity-0" data-story="2">
+                        <div class="md:w-1/2 md:pr-8 text-center md:text-right">
+                            <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-3 uppercase">PENDEKATAN</h3>
+                            <p class="text-gray-600 leading-relaxed">• Katanya cinta dapat tumbuh dengan kebersamaan, seiring berjalannya waktu kami semakin dekat dan tuhan mentakdirkan kita untuk bersama.</p>
+                        </div>
+                    </div>
+
+                    <!-- LAMARAN -->
+                    <div class="timeline-item flex flex-col md:flex-row items-center mb-16 opacity-0" data-story="3">
+                        <div class="md:w-1/2 md:pl-8 text-center md:text-left">
+                            <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-3 uppercase">LAMARAN</h3>
+                            <p class="text-gray-600 leading-relaxed">• Kehendaknya menuntun kami pada sebuah pertemuan yang tak di sangka hingga akhirnya pada 12 Juli 2025 membawa kami pada sebuah ikatan yang di Ridhoi-Nya.</p>
+                        </div>
+                    </div>
+
+                    <!-- PERNIKAHAN -->
+                    <div class="timeline-item flex flex-col md:flex-row-reverse items-center mb-16 opacity-0" data-story="4">
+                        <div class="md:w-1/2 md:pr-8 text-center md:text-right">
+                            <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-3 uppercase">PERNIKAHAN</h3>
+                            <p class="text-gray-600 leading-relaxed">• Bukan karena bertemu lalu berjodoh, tapi karna berjodohlah kami bisa bertemu. Kami memutuskan untuk mengikrarkan janji suci pernikahan pada 12 Oktober 2025. Sebagaimana yang pernah di katakan oleh Ali bin Abi Thalib : "Apa yang menjadi takdirmu akan menemukan jalannya untuk menemukanmu"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Elegant Heart Divider -->
+    <div class="section-divider divider-hearts">
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-content">
+            <div class="divider-ornament">
+                <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 text-rose-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div class="w-2 h-2 rounded-full bg-gold"></div>
+                    <svg class="w-6 h-6 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Details Section -->
+    <section id="details" class="py-20 bg-gradient-to-br from-cream/50 to-soft-pink/20 relative">
+        <div class="container mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-16 glass-card p-6 md:p-8 mx-auto max-w-3xl">
+                <h2 class="font-playfair text-4xl md:text-5xl font-bold text-gray-800 mb-4">Wedding Details</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Kami dengan senang hati mengundang Anda untuk merayakan hari bahagia kami</p>
+                <div class="w-24 h-0.5 bg-gradient-to-r from-rose-gold to-gold mx-auto mt-4"></div>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div class="text-center mb-16">
+                <div id="countdown" class="flex justify-center space-x-4 md:space-x-8">
+                    <div class="countdown-item text-center">
+                        <div class="countdown-number glass-surface rounded-lg shadow-lg p-4 mb-2">
+                            <span id="days" class="font-playfair text-3xl md:text-4xl font-bold text-rose-gold">00</span>
+                        </div>
+                        <span class="text-sm text-gray-600">Hari</span>
+                    </div>
+                    <div class="countdown-item text-center">
+                        <div class="countdown-number glass-surface rounded-lg shadow-lg p-4 mb-2">
+                            <span id="hours" class="font-playfair text-3xl md:text-4xl font-bold text-gold">00</span>
+                        </div>
+                        <span class="text-sm text-gray-600">Jam</span>
+                    </div>
+                    <div class="countdown-item text-center">
+                        <div class="countdown-number glass-surface rounded-lg shadow-lg p-4 mb-2">
+                            <span id="minutes" class="font-playfair text-3xl md:text-4xl font-bold text-rose-gold">00</span>
+                        </div>
+                        <span class="text-sm text-gray-600">Menit</span>
+                    </div>
+                    <div class="countdown-item text-center">
+                        <div class="countdown-number glass-surface rounded-lg shadow-lg p-4 mb-2">
+                            <span id="seconds" class="font-playfair text-3xl md:text-4xl font-bold text-gold">00</span>
+                        </div>
+                        <span class="text-sm text-gray-600">Detik</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Cards -->
+            <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <!-- Akad Nikah 3D Card -->
+                <div class="event-card-3d scroll-animate" data-front="info" data-back="map">
+                    <div class="event-card-inner">
+                        <!-- Front Side - Event Info -->
+                        <div class="event-front">
+                            <div class="bg-white rounded-2xl shadow-xl p-8 h-full">
+                                <div class="text-center mb-6">
+                                    <i class="fas fa-heart text-4xl text-rose-gold mb-4"></i>
+                                    <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-2">Akad Nikah</h3>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-calendar-alt text-rose-gold mr-3"></i>
+                                        <span>Minggu, 12 Oktober 2025</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-rose-gold mr-3"></i>
+                                        <span>08:00 WIB</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-map-marker-alt text-rose-gold mr-3 mt-1"></i>
+                                        <div>
+                                            <p class="font-medium">Kediaman Mempelai Wanita</p>
+                                            <p class="text-sm text-gray-600">Jl. Kober 30-44, Kembangan Selatan</p>
+                                            <p class="text-sm text-gray-600">Jakarta Barat 11610</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="w-full mt-6 py-3 bg-rose-gold text-white rounded-lg hover:bg-rose-gold/90 transition-colors event-flip-btn">
+                                    <i class="fas fa-map mr-2"></i>Lihat Peta
+                                </button>
+                                
+                                <!-- Swipe Indicator for Event Card -->
+                                <div class="event-swipe-indicator">
+                                    <div class="swipe-hint">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        <span>Swipe untuk peta</span>
+                                        <div class="swipe-arrows">
+                                            <i class="fas fa-chevron-left"></i>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Back Side - Google Maps -->
+                        <div class="event-back">
+                            <div class="bg-white rounded-2xl shadow-xl p-4 h-full">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="font-playfair text-lg font-semibold text-gray-800">Lokasi Akad Nikah</h4>
+                                    <button class="event-flip-back-btn text-rose-gold hover:text-rose-gold/80 transition-colors">
+                                        <i class="fas fa-times text-xl"></i>
+                                    </button>
+                                </div>
+                                <div class="maps-container rounded-lg overflow-hidden h-64">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d495.8218196544803!2d106.72665408491824!3d-6.187644550032717!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f77cfb323e51%3A0x5ccaadf28a62eec3!2sJl.%20Kober%2030-44%2C%20RT.4%2FRW.1%2C%20Kembangan%20Sel.%2C%20Kec.%20Kembangan%2C%20Kota%20Jakarta%20Barat%2C%20Daerah%20Khusus%20Ibukota%20Jakarta%2011610!5e0!3m2!1sid!2sid!4v1754897308961!5m2!1sid!2sid" 
+                                            width="100%" 
+                                            height="100%" 
+                                            style="border:0;" 
+                                            allowfullscreen="" 
+                                            loading="lazy" 
+                                            referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
+                                </div>
+                                <div class="mt-4 text-center">
+                                    <a href="https://maps.google.com/?q=Jl. Kober 30-44, RT.4/RW.1, Kembangan Sel., Kec. Kembangan, Kota Jakarta Barat" 
+                                       target="_blank" 
+                                       class="inline-flex items-center px-4 py-2 bg-rose-gold text-white rounded-lg hover:bg-rose-gold/90 transition-colors">
+                                        <i class="fas fa-external-link-alt mr-2"></i>
+                                        Buka di Google Maps
+                                    </a>
+                                </div>
+                                
+                                <!-- Back indicator -->
+                                <div class="event-back-indicator">
+                                    <div class="back-hint">
+                                        <i class="fas fa-undo"></i>
+                                        <span>Swipe untuk kembali</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resepsi 3D Card -->
+                <div class="event-card-3d scroll-animate" data-front="info" data-back="map">
+                    <div class="event-card-inner">
+                        <!-- Front Side - Event Info -->
+                        <div class="event-front">
+                            <div class="bg-white rounded-2xl shadow-xl p-8 h-full">
+                                <div class="text-center mb-6">
+                                    <i class="fas fa-glass-cheers text-4xl text-gold mb-4"></i>
+                                    <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-2">Resepsi</h3>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-calendar-alt text-gold mr-3"></i>
+                                        <span>12 Oktober 2025 (Rabiul Akhir 1447H)</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-gold mr-3"></i>
+                                        <span>10:00 WIB - Selesai</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fas fa-map-marker-alt text-gold mr-3 mt-1"></i>
+                                        <div>
+                                            <p class="font-medium">Pasar Minggu Kembangan Selatan</p>
+                                            <p class="text-sm text-gray-600">Gang Chober RT. 04 RW. 01</p>
+                                            <p class="text-sm text-gray-600">Jakarta Barat 11610</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="w-full mt-6 py-3 bg-gold text-white rounded-lg hover:bg-gold/90 transition-colors event-flip-btn">
+                                    <i class="fas fa-map mr-2"></i>Lihat Peta
+                                </button>
+                                
+                                <!-- Swipe Indicator for Event Card -->
+                                <div class="event-swipe-indicator">
+                                    <div class="swipe-hint">
+                                        <i class="fas fa-map-marked-alt"></i>
+                                        <span>Swipe untuk peta</span>
+                                        <div class="swipe-arrows">
+                                            <i class="fas fa-chevron-left"></i>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Back Side - Google Maps -->
+                        <div class="event-back">
+                            <div class="bg-white rounded-2xl shadow-xl p-4 h-full">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="font-playfair text-lg font-semibold text-gray-800">Lokasi Resepsi</h4>
+                                    <button class="event-flip-back-btn text-gold hover:text-gold/80 transition-colors">
+                                        <i class="fas fa-times text-xl"></i>
+                                    </button>
+                                </div>
+                                <div class="maps-container rounded-lg overflow-hidden h-64">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d495.8218196544803!2d106.72665408491824!3d-6.187644550032717!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f77cfb323e51%3A0x5ccaadf28a62eec3!2sJl.%20Kober%2030-44%2C%20RT.4%2FRW.1%2C%20Kembangan%20Sel.%2C%20Kec.%20Kembangan%2C%20Kota%20Jakarta%20Barat%2C%20Daerah%20Khusus%20Ibukota%20Jakarta%2011610!5e0!3m2!1sid!2sid!4v1754897308961!5m2!1sid!2sid" 
+                                            width="100%" 
+                                            height="100%" 
+                                            style="border:0;" 
+                                            allowfullscreen="" 
+                                            loading="lazy" 
+                                            referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
+                                </div>
+                                <div class="mt-4 text-center">
+                                    <a href="https://maps.google.com/?q=Pasar Minggu Kembangan Selatan Gang Chober RT. 04 RW. 01 Jakarta Barat" 
+                                       target="_blank" 
+                                       class="inline-flex items-center px-4 py-2 bg-gold text-white rounded-lg hover:bg-gold/90 transition-colors">
+                                        <i class="fas fa-external-link-alt mr-2"></i>
+                                        Buka di Google Maps
+                                    </a>
+                                </div>
+                                
+                                <!-- Back indicator -->
+                                <div class="event-back-indicator">
+                                    <div class="back-hint">
+                                        <i class="fas fa-undo"></i>
+                                        <span>Swipe untuk kembali</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floral Divider -->
+    <div class="section-divider divider-floral">
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-content">
+            <div class="divider-ornament">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-rose-gold" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/>
+                    </svg>
+                    <span class="font-playfair text-sm text-gray-600 italic">Moments</span>
+                    <svg class="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <h2 class="font-playfair text-4xl md:text-5xl font-bold text-gray-800 mb-4">Our Moments</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto mb-4">Kumpulan momen indah perjalanan cinta kami</p>
+                <div class="w-24 h-0.5 bg-gradient-to-r from-rose-gold to-gold mx-auto mb-6"></div>
+                
+                <!-- Interactive Guide -->
+                <div class="gallery-guide glass-card inline-block px-6 py-3 mx-auto mb-8">
+                    <div class="flex items-center justify-center gap-3 text-sm text-gray-700">
+                        <i class="fas fa-info-circle text-rose-gold"></i>
+                        <span class="hidden sm:inline">Geser kartu ke kiri atau kanan untuk melihat foto lainnya</span>
+                        <span class="sm:hidden">Swipe kartu untuk melihat foto lainnya</span>
+                        <div class="flex gap-1 ml-2">
+                            <i class="fas fa-hand-paper text-gold text-xs"></i>
+                            <i class="fas fa-arrows-alt-h text-rose-gold text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery Grid with 3D Cards -->
+            <div class="gallery-container max-w-6xl mx-auto">
+                <!-- Special layout for 5 photos -->
+                <div class="gallery-layout">
+                    <!-- Top row: 2 large cards -->
+                    <div class="gallery-row gallery-row-top">
+                                            <div class="gallery-card-3d large" data-front="Galery/1.jpg" data-back="Galery/2.jpg">
+                        <div class="card-3d-inner">
+                            <div class="card-front">
+                                <img src="Galery/1.jpg" alt="Gallery 1 Front">
+                                <div class="card-overlay">
+                                    <div class="card-info">
+                                        <i class="fas fa-heart"></i>
+                                        <span>Moment 1</span>
+                                    </div>
+                                </div>
+                                <!-- Swipe Indicator -->
+                                <div class="swipe-indicator">
+                                    <div class="swipe-hint">
+                                        <i class="fas fa-hand-pointer"></i>
+                                        <span>Swipe</span>
+                                        <div class="swipe-arrows">
+                                            <i class="fas fa-chevron-left"></i>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-back">
+                                <img src="Galery/2.jpg" alt="Gallery 1 Back">
+                                <div class="card-overlay">
+                                    <div class="card-info">
+                                        <i class="fas fa-star"></i>
+                                        <span>Moment 2</span>
+                                    </div>
+                                </div>
+                                <!-- Back indicator -->
+                                <div class="back-indicator">
+                                    <div class="back-hint">
+                                        <i class="fas fa-undo"></i>
+                                        <span>Swipe untuk kembali</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
+                        <div class="gallery-card-3d large" data-front="Galery/3.jpg" data-back="Galery/4.jpg">
+                            <div class="card-3d-inner">
+                                <div class="card-front">
+                                    <img src="Galery/3.jpg" alt="Gallery 2 Front">
+                                    <div class="card-overlay">
+                                        <div class="card-info">
+                                            <i class="fas fa-gem"></i>
+                                            <span>Moment 3</span>
+                                        </div>
+                                    </div>
+                                    <!-- Swipe Indicator -->
+                                    <div class="swipe-indicator">
+                                        <div class="swipe-hint">
+                                            <i class="fas fa-hand-pointer"></i>
+                                            <span>Swipe</span>
+                                            <div class="swipe-arrows">
+                                                <i class="fas fa-chevron-left"></i>
+                                                <i class="fas fa-chevron-right"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-back">
+                                    <img src="Galery/4.jpg" alt="Gallery 2 Back">
+                                    <div class="card-overlay">
+                                        <div class="card-info">
+                                            <i class="fas fa-crown"></i>
+                                            <span>Moment 4</span>
+                                        </div>
+                                    </div>
+                                    <!-- Back indicator -->
+                                    <div class="back-indicator">
+                                        <div class="back-hint">
+                                            <i class="fas fa-undo"></i>
+                                            <span>Swipe untuk kembali</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom row: 1 centered card -->
+                    <div class="gallery-row gallery-row-bottom">
+                        <div class="gallery-card-3d featured" data-front="Galery/5.jpg" data-back="Galery/1.jpg">
+                            <div class="card-3d-inner">
+                                <div class="card-front">
+                                    <img src="Galery/5.jpg" alt="Gallery 3 Front">
+                                    <div class="card-overlay">
+                                        <div class="card-info">
+                                            <i class="fas fa-ring"></i>
+                                            <span>Special Moment</span>
+                                        </div>
+                                    </div>
+                                    <!-- Swipe Indicator -->
+                                    <div class="swipe-indicator">
+                                        <div class="swipe-hint">
+                                            <i class="fas fa-hand-pointer"></i>
+                                            <span>Swipe</span>
+                                            <div class="swipe-arrows">
+                                                <i class="fas fa-chevron-left"></i>
+                                                <i class="fas fa-chevron-right"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-back">
+                                    <img src="Galery/1.jpg" alt="Gallery 3 Back">
+                                    <div class="card-overlay">
+                                        <div class="card-info">
+                                            <i class="fas fa-infinity"></i>
+                                            <span>Forever</span>
+                                        </div>
+                                    </div>
+                                    <!-- Back indicator -->
+                                    <div class="back-indicator">
+                                        <div class="back-hint">
+                                            <i class="fas fa-undo"></i>
+                                            <span>Swipe untuk kembali</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div id="lightbox" class="fixed inset-0 bg-black/90 z-70 hidden items-center justify-center p-4">
+            <div class="relative max-w-4xl max-h-full">
+                <img id="lightbox-image" src="" alt="Gallery Image" class="max-w-full max-h-full object-contain">
+                <button id="lightbox-close" class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300">
+                    <i class="fas fa-times"></i>
+                </button>
+                <button id="lightbox-prev" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-gray-300">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="lightbox-next" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-gray-300">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Elegant Diamond Divider -->
+    <div class="section-divider divider-elegant">
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-content">
+            <div class="divider-ornament">
+                <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 bg-rose-gold transform rotate-45"></div>
+                    <span class="font-playfair text-sm text-gray-600 font-medium">RSVP</span>
+                    <div class="w-2 h-2 bg-gold transform rotate-45"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="py-20 bg-gradient-to-br from-soft-pink/20 to-cream">
+        <div class="container mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <h2 class="font-playfair text-4xl md:text-5xl font-bold text-gray-800 mb-4">RSVP & Ucapan</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Konfirmasi kehadiran Anda dan berikan ucapan terbaik untuk kami</p>
+                <div class="w-24 h-0.5 bg-gradient-to-r from-rose-gold to-gold mx-auto mt-4"></div>
+            </div>
+
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+                <!-- RSVP Form -->
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-6 text-center">Konfirmasi Kehadiran</h3>
+                    <form id="rsvp-form" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap</label>
+                            <input type="text" id="rsvp-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent transition-all" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="rsvp-email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent transition-all" placeholder="email@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kehadiran</label>
+                            <select id="rsvp-attendance" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent transition-all" required>
+                                <option value="">Pilih kehadiran</option>
+                                <option value="hadir">Hadir</option>
+                                <option value="tidak-hadir">Tidak Hadir</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah Tamu</label>
+                            <select id="rsvp-guests" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent transition-all">
+                                <option value="1">1 Orang</option>
+                                <option value="2">2 Orang</option>
+                                <option value="3">3 Orang</option>
+                                <option value="4">4 Orang</option>
+                                <option value="5">5+ Orang</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-rose-gold to-gold text-white font-medium rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                            Kirim Konfirmasi
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Ucapan Form -->
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-6 text-center">Kirim Ucapan</h3>
+                    <form id="wishes-form" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama</label>
+                            <input type="text" id="wishes-name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent transition-all" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Ucapan & Doa</label>
+                            <textarea id="wishes-message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold focus:border-transparent transition-all resize-none" placeholder="Tuliskan ucapan dan doa terbaik untuk kami..." required></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-gold to-rose-gold text-white font-medium rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                            Kirim Ucapan
+                        </button>
+                    </form>
+
+                    <!-- Ucapan List -->
+                    <div class="mt-8">
+                        <h4 class="font-medium text-gray-800 mb-4">Ucapan Terbaru</h4>
+                        <div id="wishes-list" class="space-y-4 max-h-64 overflow-y-auto">
+                            <!-- Ucapan akan ditampilkan di sini -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Share Buttons -->
+            <div class="text-center mt-16">
+                <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-6">Bagikan Undangan</h3>
+                <div class="flex flex-wrap justify-center gap-3 md:gap-4">
+                    <button onclick="shareToWhatsApp()" class="share-btn bg-green-500 hover:bg-green-600 text-white px-4 md:px-6 py-3 rounded-lg transition-colors flex items-center">
+                        <i class="fab fa-whatsapp mr-2"></i>
+                        <span class="hidden sm:inline">WhatsApp</span>
+                        <span class="sm:hidden">WA</span>
+                    </button>
+                    <button onclick="shareToFacebook()" class="share-btn bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-3 rounded-lg transition-colors flex items-center">
+                        <i class="fab fa-facebook mr-2"></i>
+                        <span class="hidden sm:inline">Facebook</span>
+                        <span class="sm:hidden">FB</span>
+                    </button>
+                    <button onclick="shareToTwitter()" class="share-btn bg-blue-400 hover:bg-blue-500 text-white px-4 md:px-6 py-3 rounded-lg transition-colors flex items-center">
+                        <i class="fab fa-twitter mr-2"></i>
+                        <span class="hidden sm:inline">Twitter</span>
+                        <span class="sm:hidden">TW</span>
+                    </button>
+                    <button onclick="copyLink()" class="share-btn bg-gray-600 hover:bg-gray-700 text-white px-4 md:px-6 py-3 rounded-lg transition-colors flex items-center">
+                        <i class="fas fa-link mr-2"></i>
+                        <span class="hidden sm:inline">Copy Link</span>
+                        <span class="sm:hidden">Copy</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Currency Divider -->
+    <div class="section-divider">
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-content">
+            <div class="divider-ornament">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-rose-gold" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span class="font-playfair text-sm text-gray-600 font-medium">Digital Gift</span>
+                    <svg class="w-5 h-5 text-gold" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Amplop Digital Section -->
+    <section id="amplop" class="py-20 bg-white relative">
+        <div class="container mx-auto px-4">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <h2 class="font-playfair text-4xl md:text-5xl font-bold text-gray-800 mb-4">Amplop Digital</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Dan jika memberi adalah ungkapan tanda kasih Anda, Anda dapat memberi kado secara cashless.</p>
+                <div class="w-24 h-0.5 bg-gradient-to-r from-rose-gold to-gold mx-auto mt-4"></div>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                <!-- Rekening Bank -->
+                <div class="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300">
+                    <div class="text-center mb-6">
+                        <i class="fas fa-university text-4xl text-rose-gold mb-4"></i>
+                        <h3 class="font-playfair text-2xl font-semibold text-gray-800 mb-2">Transfer Bank</h3>
+                    </div>
+                    
+                    <!-- BCA Mario -->
+                    <div class="mb-6 p-4 bg-gradient-to-r from-rose-gold/10 to-gold/10 rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-gray-800">Bank BCA</span>
+                            <img src="https://logo.clearbit.com/bca.co.id" alt="BCA" class="h-6 w-auto" onerror="this.style.display='none'">
+                        </div>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="text-sm text-gray-600">No. Rekening:</label>
+                                <div class="flex items-center justify-between bg-white p-2 rounded border">
+                                    <span class="font-mono text-lg" id="bca-mario">2880272228</span>
+                                    <button onclick="copyToClipboard('2880272228', 'BCA Mario')" class="text-rose-gold hover:text-rose-gold/80 transition-colors">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-600">Atas Nama:</label>
+                                <p class="font-semibold">Mario</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BCA Indah -->
+                    <div class="p-4 bg-gradient-to-r from-gold/10 to-rose-gold/10 rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-gray-800">Bank BCA</span>
+                            <img src="https://logo.clearbit.com/bca.co.id" alt="BCA" class="h-6 w-auto" onerror="this.style.display='none'">
+                        </div>
+                        <div class="space-y-2">
+                            <div>
+                                <label class="text-sm text-gray-600">No. Rekening:</label>
+                                <div class="flex items-center justify-between bg-white p-2 rounded border">
+                                    <span class="font-mono text-lg" id="bca-indah">7025193814</span>
+                                    <button onclick="copyToClipboard('7025193814', 'BCA Indah')" class="text-gold hover:text-gold/80 transition-colors">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-600">Atas Nama:</label>
+                                <p class="font-semibold">Indah Lestari Leonita</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thank You Note -->
+            <div class="text-center mt-12">
+                <div class="max-w-2xl mx-auto bg-gradient-to-r from-rose-gold/10 to-gold/10 rounded-2xl p-6">
+                    <i class="fas fa-heart text-2xl text-rose-gold mb-3"></i>
+                    <p class="text-gray-700 italic">
+                        "Kehadiran dan doa restu dari Anda sudah merupakan hadiah yang sangat berharga bagi kami. 
+                        Namun jika Anda ingin memberikan hadiah, Anda dapat mengirimkannya melalui rekening atau e-wallet di atas."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gratitude Divider -->
+    <div class="section-divider divider-hearts">
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-float"></div>
+        <div class="divider-content">
+            <div class="divider-ornament">
+                <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 text-rose-gold" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="font-playfair text-sm text-gray-600 font-medium italic">Thank You</span>
+                    <svg class="w-6 h-6 text-gold" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thank You Section -->
+    <section id="thanks" class="py-20 bg-gradient-to-br from-rose-gold/20 via-soft-pink/30 to-gold/20 relative overflow-hidden">
+        <!-- Background Video Effect -->
+        <div class="absolute inset-0 opacity-20">
+            <div class="falling-petals">
+                <div class="petal petal-1"></div>
+                <div class="petal petal-2"></div>
+                <div class="petal petal-3"></div>
+                <div class="petal petal-4"></div>
+                <div class="petal petal-5"></div>
+                <div class="petal petal-6"></div>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="max-w-3xl mx-auto">
+                <!-- Thank You Message -->
+                <div class="thanks-content opacity-0">
+                    <h2 class="font-playfair text-4xl md:text-6xl font-bold text-gray-800 mb-6">Terima Kasih</h2>
+                    <p class="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+                        Kehadiran dan doa restu Anda merupakan keberkahan yang sangat berarti bagi kami. 
+                        Semoga Allah SWT senantiasa melimpahkan rahmat dan keberkahan kepada kita semua.
+                    </p>
+                    
+                    <!-- Couple Signature -->
+                    <div class="signature-section">
+                        <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-12 mb-8">
+                            <div class="text-center">
+                                <p class="font-playfair text-2xl text-rose-gold mb-2">Indah</p>
+                                <div class="signature-line w-24 h-0.5 bg-rose-gold mx-auto"></div>
+                            </div>
+                            <div class="text-gold text-2xl">&</div>
+                            <div class="text-center">
+                                <p class="font-playfair text-2xl text-gold mb-2">Mario</p>
+                                <div class="signature-line w-24 h-0.5 bg-gold mx-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Closing Quote -->
+                    <div class="quote-section bg-white/50 backdrop-blur-sm rounded-2xl p-8 mb-8">
+                        <i class="fas fa-quote-left text-2xl text-rose-gold mb-4"></i>
+                        <p class="font-playfair text-xl text-gray-800 italic mb-4">
+                            "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu 
+                            isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, 
+                            dan dijadikan-Nya diantaramu rasa kasih dan sayang."
+                        </p>
+                        <p class="text-sm text-gray-600">QS. Ar-Rum: 21</p>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="contact-info">
+                        <p class="text-gray-600 mb-2">Untuk informasi lebih lanjut, hubungi:</p>
+                        <div class="flex justify-center space-x-6">
+                            <a href="tel:+62812455392" class="text-rose-gold hover:text-rose-gold/80 transition-colors">
+                                <i class="fas fa-phone mr-2"></i>+62 812-1945-5392
+                            </a>
+                            <a href="mailto:putri.randi@wedding.com" class="text-gold hover:text-gold/80 transition-colors">
+                                <i class="fas fa-envelope mr-2"></i>putri.randi@wedding.com
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm opacity-75">
+                Made with <i class="fas fa-heart text-rose-gold mx-1"></i> for Indah & Mario
+            </p>
+            <p class="text-xs opacity-50 mt-2">© 2024 Wedding Invitation. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Audio Element for Background Music -->
+    <audio id="background-music" src="Music/The%20Way%20You%20Look%20At%20Me%20-%20Christian%20Bautista%20%28Saxophone%20Cover%29%20Saxserenade.mp3" loop preload="auto"></audio>
+    
+    <!-- Music Alert Notification -->
+    <div id="music-alert" class="music-alert">
+        <i id="music-alert-icon" class="fas fa-music music-alert-icon"></i>
+        <h3 id="music-alert-title" class="music-alert-title">Musik Wedding</h3>
+        <p id="music-alert-message" class="music-alert-message">Musik romantis sedang diputar untuk melengkapi suasana pernikahan kami ♪</p>
+        <button id="music-alert-close" class="music-alert-close">Tutup</button>
+    </div>
+    
+    <!-- Alternative: Web Audio API for better control -->
+    <script>
+        // Minimal audio init: only ensure fade in/out and correct volume for local file
+        function initAdvancedAudio() {
+            const audio = document.getElementById('background-music');
+            if (!audio) return;
+            audio.volume = 0.7;
+            audio.addEventListener('play', () => {
+                try { gsap.fromTo(audio, {volume: 0}, {volume: 0.7, duration: 1.2}); } catch (e) {}
+            });
+            audio.addEventListener('pause', () => {
+                try { gsap.to(audio, {volume: 0, duration: 0.8}); } catch (e) {}
+            });
+        }
+        document.addEventListener('DOMContentLoaded', initAdvancedAudio);
+    </script>
+
+    <!-- Firebase (App + Firestore) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+        import { 
+            getFirestore, collection, addDoc, serverTimestamp, 
+            onSnapshot, query, orderBy, limit 
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCic-Ulb2VV7RKbOyuZnRu9NFCT2eAA1uQ",
+            authDomain: "wedding-indah-2a97a.firebaseapp.com",
+            projectId: "wedding-indah-2a97a",
+            storageBucket: "wedding-indah-2a97a.firebasestorage.app",
+            messagingSenderId: "241115909205",
+            appId: "1:241115909205:web:0c1fd3b5b1c534fdf058dc",
+            measurementId: "G-Q7B9ZD0Y26"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        try { getAnalytics(app); } catch (_) {}
+        const db = getFirestore(app);
+
+        // Expose helpers to window for script.js
+        window.firebaseAddRSVP = async (data) => {
+            return addDoc(collection(db, 'rsvps'), {
+                name: String(data.name || '').slice(0, 100),
+                email: String(data.email || '').slice(0, 150),
+                attendance: String(data.attendance || ''),
+                guests: Number(data.guests || 1),
+                createdAt: serverTimestamp()
+            });
+        };
+
+        window.firebaseAddWish = async (data) => {
+            return addDoc(collection(db, 'wishes'), {
+                name: String(data.name || '').slice(0, 100),
+                message: String(data.message || '').slice(0, 500),
+                createdAt: serverTimestamp()
+            });
+        };
+
+        window.firebaseListenWishes = (callback) => {
+            const q = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'), limit(30));
+            return onSnapshot(q, (snapshot) => {
+                const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                callback(items);
+            });
+        };
+    </script>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
+

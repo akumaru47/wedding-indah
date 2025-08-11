@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daftar Hadir Tamu - Indah & Mario</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-cream min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 py-10">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-8">
+      <h1 class="font-playfair text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 text-center md:text-left">
+        Daftar Tamu Hadir
+      </h1>
+      <a href="./index.html" class="self-center md:self-auto inline-flex items-center text-rose-gold hover:text-rose-gold/80">
+        <i class="fas fa-arrow-left mr-2"></i>
+        <span class="hidden sm:inline">Kembali ke Undangan</span>
+        <span class="sm:hidden">Kembali</span>
+      </a>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Pencarian</label>
+          <input id="search-input" type="text" placeholder="Cari nama atau email..." class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent" />
+        </div>
+        <div class="col-span-1">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Filter Kehadiran</label>
+          <select id="filter-attendance" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-gold focus:border-transparent">
+            <option value="hadir" selected>Hadir saja</option>
+            <option value="tidak-hadir">Tidak Hadir saja</option>
+            <option value="all">Semua (Hadir & Tidak Hadir)</option>
+          </select>
+        </div>
+        <div class="col-span-1 flex items-end">
+          <button id="export-csv" class="w-full md:w-auto px-5 py-2.5 bg-gradient-to-r from-rose-gold to-gold text-black font-medium rounded-lg hover:shadow-lg transition-all">
+            <i class="fas fa-file-export mr-2"></i>Export CSV
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <!-- Desktop/Table view -->
+      <div class="overflow-x-auto hidden md:block">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kehadiran</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Tamu</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu</th>
+            </tr>
+          </thead>
+          <tbody id="rsvp-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+        </table>
+      </div>
+      <!-- Mobile/Card view -->
+      <div class="md:hidden">
+        <div id="rsvp-card-list" class="divide-y divide-gray-100"></div>
+      </div>
+
+      <div id="empty-state" class="hidden p-8 text-center text-gray-500">Belum ada data.</div>
+    </div>
+
+    <p class="text-xs text-gray-400 mt-4">Catatan: Halaman ini hanya bisa diakses via URL langsung: /daftar-hadir.html</p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCic-Ulb2VV7RKbOyuZnRu9NFCT2eAA1uQ",
+      authDomain: "wedding-indah-2a97a.firebaseapp.com",
+      projectId: "wedding-indah-2a97a",
+      storageBucket: "wedding-indah-2a97a.firebasestorage.app",
+      messagingSenderId: "241115909205",
+      appId: "1:241115909205:web:0c1fd3b5b1c534fdf058dc",
+      measurementId: "G-Q7B9ZD0Y26"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const tbody = document.getElementById('rsvp-table-body');
+    const cardList = document.getElementById('rsvp-card-list');
+    const emptyState = document.getElementById('empty-state');
+    const searchInput = document.getElementById('search-input');
+    const filterAttendance = document.getElementById('filter-attendance');
+    const exportBtn = document.getElementById('export-csv');
+
+    let allData = [];
+
+    function formatTs(ts) {
+      try {
+        if (!ts) return '';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      } catch {
+        return '';
+      }
+    }
+
+    function render(data) {
+      // Clear
+      tbody.innerHTML = '';
+      if (cardList) cardList.innerHTML = '';
+
+      if (!data.length) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      data.forEach((row, idx) => {
+        // Table row (desktop)
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="px-4 py-3 text-sm text-gray-700">${idx + 1}</td>
+          <td class="px-4 py-3 text-sm font-medium text-gray-900">${(row.name || '').replace(/</g,'&lt;')}</td>
+          <td class="px-4 py-3 text-sm text-gray-700">${(row.email || '').replace(/</g,'&lt;')}</td>
+          <td class="px-4 py-3 text-sm">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${row.attendance === 'hadir' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}">${row.attendance || ''}</span>
+          </td>
+          <td class="px-4 py-3 text-sm text-gray-700">${row.guests ?? ''}</td>
+          <td class="px-4 py-3 text-sm text-gray-500">${formatTs(row.createdAt)}</td>
+        `;
+        tbody.appendChild(tr);
+
+        // Card (mobile)
+        if (cardList) {
+          const card = document.createElement('div');
+          card.className = 'p-4';
+          card.innerHTML = `
+            <div class="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-base font-semibold text-gray-900">${(row.name || '').replace(/</g,'&lt;')}</div>
+                  <div class="text-xs text-gray-500 mt-0.5">${(row.email || '').replace(/</g,'&lt;')}</div>
+                </div>
+                <span class="ml-3 inline-flex items-center px-2 py-1 rounded-full text-[11px] font-medium ${row.attendance === 'hadir' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}">${row.attendance || ''}</span>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+                <div class="rounded-lg bg-gray-50 p-2">
+                  <div class="text-[11px] text-gray-500">Jumlah Tamu</div>
+                  <div class="font-medium text-gray-800">${row.guests ?? '-'}</div>
+                </div>
+                <div class="rounded-lg bg-gray-50 p-2">
+                  <div class="text-[11px] text-gray-500">Waktu</div>
+                  <div class="font-medium text-gray-800">${formatTs(row.createdAt) || '-'}</div>
+                </div>
+              </div>
+            </div>
+          `;
+          cardList.appendChild(card);
+        }
+      });
+    }
+
+    function applyFilters() {
+      const q = (searchInput.value || '').toLowerCase();
+      const filterVal = filterAttendance.value;
+      const filtered = allData.filter(r => {
+        const matchText = (r.name || '').toLowerCase().includes(q) || (r.email || '').toLowerCase().includes(q);
+        let matchAttend = true;
+        if (filterVal === 'hadir') matchAttend = r.attendance === 'hadir';
+        else if (filterVal === 'tidak-hadir') matchAttend = r.attendance === 'tidak-hadir';
+        else matchAttend = true;
+        return matchText && matchAttend;
+      });
+      render(filtered);
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    filterAttendance.addEventListener('change', applyFilters);
+
+    exportBtn.addEventListener('click', () => {
+      const rows = [['No','Nama','Email','Kehadiran','Jumlah Tamu','Waktu']];
+      const data = tbody.querySelectorAll('tr');
+      data.forEach((tr) => {
+        const tds = tr.querySelectorAll('td');
+        if (tds.length >= 6) {
+          rows.push([
+            tds[0].innerText.trim(),
+            tds[1].innerText.trim(),
+            tds[2].innerText.trim(),
+            tds[3].innerText.trim(),
+            tds[4].innerText.trim(),
+            tds[5].innerText.trim(),
+          ]);
+        }
+      });
+      const csv = rows.map(r => r.map(v => '"' + v.replace(/"/g,'""') + '"').join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'daftar-hadir.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    // Live data
+    const qRef = query(collection(db, 'rsvps'), orderBy('createdAt','desc'));
+    onSnapshot(qRef, (snap) => {
+      allData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      applyFilters();
+    }, (err) => {
+      console.error('Listen error:', err);
+    });
+  </script>
+</body>
+</html>
+
+
