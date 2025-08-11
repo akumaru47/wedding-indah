@@ -887,12 +887,12 @@ function initializeEventCards() {
             const deltaX = touch.clientX - startX;
             const deltaY = touch.clientY - startY;
             
-            // More strict horizontal swipe detection
-            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 2 && Math.abs(deltaX) > 30;
-            const isVerticalScroll = Math.abs(deltaY) > Math.abs(deltaX) * 1.5 && Math.abs(deltaY) > 20;
+            // More responsive horizontal swipe detection
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 1.5 && Math.abs(deltaX) > 20;
+            const isVerticalScroll = Math.abs(deltaY) > Math.abs(deltaX) * 2 && Math.abs(deltaY) > 25;
             
             if (isHorizontalSwipe && !isVerticalScroll) {
-                const rotationY = currentRotationY + (deltaX * 0.3);
+                const rotationY = currentRotationY + (deltaX * 0.4);
                 gsap.set(cardInner, { rotationY: rotationY });
                 e.preventDefault(); // Prevent scrolling only for horizontal swipes
             } else if (isVerticalScroll) {
@@ -918,15 +918,15 @@ function initializeEventCards() {
             const deltaY = touch.clientY - startY;
             
             // Only process horizontal swipes for card flip
-            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 2;
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
             
             // Mark as interacted for indicator fade
-            if (Math.abs(deltaX) > 30 && isHorizontalSwipe) {
+            if (Math.abs(deltaX) > 20 && isHorizontalSwipe) {
                 card.classList.add('interacted');
             }
             
-            // Determine final position based on swipe distance (increased threshold)
-            if (Math.abs(deltaX) > 60 && isHorizontalSwipe) {
+            // Determine final position based on swipe distance (more responsive threshold)
+            if (Math.abs(deltaX) > 40 && isHorizontalSwipe) {
                 // Significant horizontal swipe - flip card
                 if (deltaX > 0 && !isFlipped) {
                     flipToMap();
@@ -1071,12 +1071,12 @@ function initializeGallery() {
             const deltaX = touch.clientX - startX;
             const deltaY = touch.clientY - startY;
             
-            // More strict horizontal swipe detection for gallery
-            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 2 && Math.abs(deltaX) > 30;
-            const isVerticalScroll = Math.abs(deltaY) > Math.abs(deltaX) * 1.5 && Math.abs(deltaY) > 20;
+            // More responsive horizontal swipe detection for gallery
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 1.5 && Math.abs(deltaX) > 20;
+            const isVerticalScroll = Math.abs(deltaY) > Math.abs(deltaX) * 2 && Math.abs(deltaY) > 25;
             
             if (isHorizontalSwipe && !isVerticalScroll) {
-                const rotationY = currentRotationY + (deltaX * 0.3);
+                const rotationY = currentRotationY + (deltaX * 0.4);
                 gsap.set(cardInner, { rotationY: rotationY });
                 e.preventDefault(); // Prevent scrolling only for horizontal swipes
             } else if (isVerticalScroll) {
@@ -1102,15 +1102,15 @@ function initializeGallery() {
             const deltaY = touch.clientY - startY;
             
             // Only process horizontal swipes for gallery card flip
-            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 2;
+            const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
             
             // Mark as interacted for indicator fade
-            if (Math.abs(deltaX) > 30 && isHorizontalSwipe) {
+            if (Math.abs(deltaX) > 20 && isHorizontalSwipe) {
                 card.classList.add('interacted');
             }
             
-            // Determine final position based on swipe distance (increased threshold)
-            if (Math.abs(deltaX) > 60 && isHorizontalSwipe) {
+            // Determine final position based on swipe distance (more responsive threshold)
+            if (Math.abs(deltaX) > 40 && isHorizontalSwipe) {
                 // Significant horizontal swipe - flip card
                 isFlipped = deltaX > 0 ? true : false;
                 currentRotationY = isFlipped ? 180 : 0;
