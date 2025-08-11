@@ -1447,12 +1447,39 @@ function initializeMusicControl() {
     const musicAlertClose = document.getElementById('music-alert-close');
     
     if (audioElement) {
-        audioElement.volume = 0.1;
+        audioElement.volume = 0.5;
         audioElement.loop = true;
-        // Ensure src is set and accessible
-        if (!audioElement.getAttribute('src')) {
-            audioElement.setAttribute('src', 'Music/The%20Way%20You%20Look%20At%20Me%20-%20Christian%20Bautista%20%28Saxophone%20Cover%29%20Saxserenade.mp3');
-        }
+        
+        // Debug: Check if audio source is accessible
+        console.log('Audio source:', audioElement.getAttribute('src'));
+        
+        // Add error event listener
+        audioElement.addEventListener('error', (e) => {
+            console.error('Audio loading error:', e);
+            console.error('Audio error code:', audioElement.error ? audioElement.error.code : 'Unknown');
+            showNotification('Error loading music file: music2.mp3', 'error');
+        });
+        
+        // Add load event listener
+        audioElement.addEventListener('loadeddata', () => {
+            console.log('Audio loaded successfully');
+            console.log('Audio duration:', audioElement.duration);
+            console.log('Current audio source:', audioElement.currentSrc);
+            
+            // Determine which music is playing
+            const isMusic2 = audioElement.currentSrc.includes('music2.mp3');
+            console.log('Using music2.mp3:', isMusic2);
+        });
+        
+        // Add additional debug for source changes
+        audioElement.addEventListener('loadstart', () => {
+            console.log('Audio load started');
+        });
+        
+        audioElement.addEventListener('canplay', () => {
+            console.log('Audio can start playing');
+        });
+        
         // Load metadata early
         audioElement.load();
     }
@@ -1477,9 +1504,17 @@ function initializeMusicControl() {
         const alertMessage = document.getElementById('music-alert-message');
         
         if (isPlaying) {
+            const audioElement = document.getElementById('background-music');
+            const isMusic2 = audioElement && audioElement.currentSrc.includes('music2.mp3');
+            
             alertIcon.className = 'fas fa-music music-alert-icon playing';
             alertTitle.textContent = 'Musik Wedding Dimulai';
-            alertMessage.innerHTML = 'Musik romantis sedang diputar untuk melengkapi suasana pernikahan kami ♪<br><small>The Way You Look At Me - Christian Bautista</small>';
+            
+            if (isMusic2) {
+                alertMessage.innerHTML = 'Musik romantis sedang diputar untuk melengkapi suasana pernikahan kami ♪<br><small>music2.mp3</small>';
+            } else {
+                alertMessage.innerHTML = 'Musik romantis sedang diputar untuk melengkapi suasana pernikahan kami ♪<br><small>The Way You Look At Me - Christian Bautista</small>';
+            }
         } else {
             alertIcon.className = 'fas fa-pause music-alert-icon';
             alertTitle.textContent = 'Musik Dihentikan';
