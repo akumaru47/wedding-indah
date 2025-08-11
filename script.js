@@ -989,11 +989,11 @@ function initializeGallery() {
     // Add interactions to 3D gallery cards
     gallery3DCards.forEach((card, cardIndex) => {
         const cardInner = card.querySelector('.card-3d-inner');
-        let isFlipped = false;
         let isDragging = false;
         let startX = 0;
         let startY = 0;
         let currentRotationY = 0;
+        let isRotating = false;
         
         // Initialize card rotation
         gsap.set(cardInner, { rotationY: 0 });
@@ -1023,7 +1023,7 @@ function initializeGallery() {
         });
         
         document.addEventListener('mouseup', (e) => {
-            if (!isDragging) return;
+            if (!isDragging || isRotating) return;
             
             isDragging = false;
             card.style.cursor = 'grab';
@@ -1036,21 +1036,32 @@ function initializeGallery() {
                 card.classList.add('interacted');
             }
             
-            // Determine final position based on drag distance
-            if (Math.abs(deltaX) > 50) {
-                // Significant drag - flip card
-                isFlipped = deltaX > 0 ? true : false;
-                currentRotationY = isFlipped ? 180 : 0;
-            } else {
-                // Small drag - return to current state
-                currentRotationY = isFlipped ? 180 : 0;
+            // Determine final position based on drag distance for 360° rotation
+            if (Math.abs(deltaX) > 80) {
+                isRotating = true;
+                // Significant drag - rotate card 90 degrees in drag direction
+                if (deltaX > 0) {
+                    // Drag right - rotate clockwise
+                    currentRotationY += 90;
+                } else {
+                    // Drag left - rotate counter-clockwise
+                    currentRotationY -= 90;
+                }
+                
+                // Normalize rotation to 0-360 range for cleaner values (optional)
+                currentRotationY = currentRotationY % 360;
+                if (currentRotationY < 0) currentRotationY += 360;
             }
+            // If small drag, keep current rotation (no change needed)
             
             // Animate to final position
             gsap.to(cardInner, {
                 rotationY: currentRotationY,
                 duration: 0.6,
-                ease: 'power2.out'
+                ease: 'power2.out',
+                onComplete: () => {
+                    isRotating = false;
+                }
             });
         });
         
@@ -1093,7 +1104,7 @@ function initializeGallery() {
         });
         
         card.addEventListener('touchend', (e) => {
-            if (!isDragging) return;
+            if (!isDragging || isRotating) return;
             
             isDragging = false;
             card.classList.remove('dragging');
@@ -1109,21 +1120,32 @@ function initializeGallery() {
                 card.classList.add('interacted');
             }
             
-            // Determine final position based on swipe distance (more responsive threshold)
-            if (Math.abs(deltaX) > 40 && isHorizontalSwipe) {
-                // Significant horizontal swipe - flip card
-                isFlipped = deltaX > 0 ? true : false;
-                currentRotationY = isFlipped ? 180 : 0;
-            } else {
-                // Small swipe or vertical movement - return to current state
-                currentRotationY = isFlipped ? 180 : 0;
+            // Determine final position based on swipe distance for 360° rotation
+            if (Math.abs(deltaX) > 70 && isHorizontalSwipe) {
+                isRotating = true;
+                // Significant horizontal swipe - rotate card 90 degrees in swipe direction
+                if (deltaX > 0) {
+                    // Swipe right - rotate clockwise
+                    currentRotationY += 90;
+                } else {
+                    // Swipe left - rotate counter-clockwise
+                    currentRotationY -= 90;
+                }
+                
+                // Normalize rotation to 0-360 range for cleaner values (optional)
+                currentRotationY = currentRotationY % 360;
+                if (currentRotationY < 0) currentRotationY += 360;
             }
+            // If small swipe, keep current rotation (no change needed)
             
             // Animate to final position
             gsap.to(cardInner, {
                 rotationY: currentRotationY,
                 duration: 0.6,
-                ease: 'power2.out'
+                ease: 'power2.out',
+                onComplete: () => {
+                    isRotating = false;
+                }
             });
         });
         
@@ -1137,7 +1159,10 @@ function initializeGallery() {
                     // Single tap - do nothing (let swipe handle rotation)
                 } else if (tapCount === 2) {
                     // Double tap - open lightbox
-                    const currentSrc = isFlipped ? card.dataset.back : card.dataset.front;
+                    // Determine which side is currently showing based on rotation
+                    const normalizedRotation = ((currentRotationY % 360) + 360) % 360;
+                    const isBackSide = normalizedRotation > 90 && normalizedRotation < 270;
+                    const currentSrc = isBackSide ? card.dataset.back : card.dataset.front;
                     const imageIndex = galleryImages.indexOf(currentSrc);
                     if (imageIndex !== -1) {
                         currentGalleryIndex = imageIndex;
